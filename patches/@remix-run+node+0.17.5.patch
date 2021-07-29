@@ -1,0 +1,122 @@
+diff --git a/node_modules/@remix-run/node/errors.js b/node_modules/@remix-run/node/errors.js
+index 26820f0..fd02163 100644
+--- a/node_modules/@remix-run/node/errors.js
++++ b/node_modules/@remix-run/node/errors.js
+@@ -1,7 +1,10 @@
+ // Copyright © 2021 React Training LLC. All rights reserved.
+-'use strict';
++'use strict'
++const sourceMap = require('source-map')
++const fs = require('fs')
++const path = require('path')
+ 
+-Object.defineProperty(exports, '__esModule', { value: true });
++Object.defineProperty(exports, '__esModule', { value: true })
+ 
+ /**
+  * This thing probably warrants some explanation.
+@@ -44,11 +47,68 @@ Object.defineProperty(exports, '__esModule', { value: true });
+  * because it came first, and that just wouldn't be fair to let errors cut in
+  * line.
+  */
+-function serializeError(error) {
++const ROOT = process.env.INIT_CWD + '/'
++
++async function serializeError(error) {
++  const lines = error.stack.split('\n')
++  const promises = lines.map(mapSource)
++  const stack = (await Promise.all(promises)).join('\n')
+   return {
+     message: error.message,
+-    stack: error.stack && error.stack.replace(/\((.+?)\)/g, (_match, file) => `(file://${file})`)
+-  };
++    stack,
++  }
++}
++// pattern for source mapping
++const re = /(?<at>\s+at.+)\((?<filename>.+):(?<line>\d+):(?<column>\d+)\)/
++
++async function mapSource(stackLine) {
++  const match = re.exec(stackLine)
++  if (!match) {
++    // doesn't match pattern but may still have a filename
++    return relativeFilename(stackLine)
++  }
++
++  let { at, filename, line, column } = match.groups
++  const mapFilename = `${filename}.map`
++  filename = relativeFilename(filename)
++
++  if (fs.existsSync(mapFilename)) {
++    // read source map and setup consumer
++    const map = JSON.parse(fs.readFileSync(mapFilename))
++    map.sourceRoot = path.dirname(mapFilename)
++    const smc = await new sourceMap.SourceMapConsumer(map)
++    // get position
++    const pos = getOriginalPositionFor(
++      smc,
++      parseInt(line, 10),
++      parseInt(column, 10),
++    )
++    if (pos.source) {
++      filename = relativeFilename(pos.source)
++      line = pos.line
++      column = pos.column
++      at = `    at \`${getSourceContentFor(smc, pos).trim()}\` `
++    }
++  }
++  return `${at}(${filename}:${line}:${column})`
++}
++
++function relativeFilename(filename) {
++  if (filename.includes('route-module:')) {
++    filename = filename.substring(filename.indexOf('route-module:'))
++  }
++  return filename.replace('route-module:', '').replace(ROOT, './')
++}
++
++function getOriginalPositionFor(smc, line, column) {
++  const mapPos = { line, column }
++  const pos = smc.originalPositionFor(mapPos)
++  return pos
++}
++
++function getSourceContentFor(smc, pos) {
++  const src = smc.sourceContentFor(pos.source)
++  return src.split('\n')[pos.line - 1]
+ }
+ 
+-exports.serializeError = serializeError;
++exports.serializeError = serializeError
+diff --git a/node_modules/@remix-run/node/server.js b/node_modules/@remix-run/node/server.js
+index 2a96bd3..1bb5904 100644
+--- a/node_modules/@remix-run/node/server.js
++++ b/node_modules/@remix-run/node/server.js
+@@ -58,7 +58,7 @@ async function handleDataRequest(request, loadContext, build, routes) {
+   try {
+     response = isActionRequest(request) ? await data.callRouteAction(build, routeMatch.route.id, clonedRequest, loadContext, routeMatch.params) : await data.loadRouteData(build, routeMatch.route.id, clonedRequest, loadContext, routeMatch.params);
+   } catch (error) {
+-    return responses.json(errors.serializeError(error), {
++    return responses.json(await errors.serializeError(error), {
+       status: 500,
+       headers: {
+         "X-Remix-Error": "unfortunately, yes"
+@@ -110,7 +110,7 @@ async function handleDocumentRequest(request, loadContext, build, routes, server
+       actionErrored = true;
+       let withBoundaries = getMatchesUpToDeepestErrorBoundary(matches);
+       componentDidCatchEmulator.loaderBoundaryRouteId = withBoundaries[withBoundaries.length - 1].route.id;
+-      componentDidCatchEmulator.error = errors.serializeError(error);
++      componentDidCatchEmulator.error = await errors.serializeError(error);
+     }
+   }
+ 
+@@ -154,8 +154,7 @@ async function handleDocumentRequest(request, loadContext, build, routes, server
+       if (serverMode !== mode.ServerMode.Test) {
+         console.error(`There was an error running the data loader for route ${route.id}`);
+       }
+-
+-      componentDidCatchEmulator.error = errors.serializeError(response);
++      componentDidCatchEmulator.error = await errors.serializeError(response);
+       routeLoaderResults[index] = responses.json(null, {
+         status: 500
+       });

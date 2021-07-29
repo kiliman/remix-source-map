@@ -1,0 +1,20 @@
+diff --git a/node_modules/@remix-run/dev/compiler.js b/node_modules/@remix-run/dev/compiler.js
+index 86e2c58..0990b7f 100644
+--- a/node_modules/@remix-run/dev/compiler.js
++++ b/node_modules/@remix-run/dev/compiler.js
+@@ -185,6 +185,7 @@ async function createBrowserBuild(config, options) {
+     bundle: true,
+     splitting: true,
+     metafile: true,
++    sourcemap: true,
+     incremental: options.incremental,
+     minify: options.mode === build$1.BuildMode.Production,
+     entryNames: "[dir]/[name]-[hash]",
+@@ -212,6 +213,7 @@ async function createServerBuild(config, options) {
+     inject: [reactShim],
+     loader: loaders.loaders,
+     bundle: true,
++    sourcemap: true,
+     incremental: options.incremental,
+     // The server build needs to know how to generate asset URLs for imports
+     // of CSS and other files.

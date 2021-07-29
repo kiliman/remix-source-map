@@ -1,0 +1,60 @@
+diff --git a/node_modules/@remix-run/react/browser/errorBoundaries.js b/node_modules/@remix-run/react/browser/errorBoundaries.js
+index afe7e6d..54782d5 100644
+--- a/node_modules/@remix-run/react/browser/errorBoundaries.js
++++ b/node_modules/@remix-run/react/browser/errorBoundaries.js
+@@ -51,7 +51,7 @@ class RemixErrorBoundary extends React.Component {
+ function RemixRootDefaultErrorBoundary({
+   error
+ }) {
+-  console.error(error);
++  console.log(error.stack);
+   return /*#__PURE__*/React.createElement("html", {
+     lang: "en"
+   }, /*#__PURE__*/React.createElement("head", null, /*#__PURE__*/React.createElement("meta", {
+@@ -61,14 +61,14 @@ function RemixRootDefaultErrorBoundary({
+       border: "solid 2px hsl(10, 50%, 50%)",
+       padding: "2rem"
+     }
+-  }, /*#__PURE__*/React.createElement("div", null, /*#__PURE__*/React.createElement("h1", null, "Uncaught Exception!"), /*#__PURE__*/React.createElement("p", null, "If you are not the developer, please click back in your browser and try again."), /*#__PURE__*/React.createElement("div", {
++  }, /*#__PURE__*/React.createElement("pre", null, /*#__PURE__*/React.createElement("h1", null, "Uncaught Exception!"), /*#__PURE__*/React.createElement("p", null, "If you are not the developer, please click back in your browser and try again."), /*#__PURE__*/React.createElement("div", {
+     style: {
+       fontFamily: `"SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace`,
+       padding: "1rem",
+       margin: "1rem 0",
+       border: "solid 4px"
+     }
+-  }, error.message), /*#__PURE__*/React.createElement("p", null, "There was an uncaught exception in your application. Check the browser console and/or server console to inspect the error."), /*#__PURE__*/React.createElement("p", null, "If you are the developer, consider adding your own error boundary so users don't see this page when unexpected errors happen in production!"), /*#__PURE__*/React.createElement("p", null, "Read more about", " ", /*#__PURE__*/React.createElement("a", {
++  }, error.stack), /*#__PURE__*/React.createElement("p", null, "There was an uncaught exception in your application. Check the browser console and/or server console to inspect the error."), /*#__PURE__*/React.createElement("p", null, "If you are the developer, consider adding your own error boundary so users don't see this page when unexpected errors happen in production!"), /*#__PURE__*/React.createElement("p", null, "Read more about", " ", /*#__PURE__*/React.createElement("a", {
+     target: "_blank",
+     rel: "noreferrer",
+     href: "https://remix.run/dashboard/docs/errors"
+diff --git a/node_modules/@remix-run/react/errorBoundaries.js b/node_modules/@remix-run/react/errorBoundaries.js
+index 82b3fc5..e919e5f 100644
+--- a/node_modules/@remix-run/react/errorBoundaries.js
++++ b/node_modules/@remix-run/react/errorBoundaries.js
+@@ -59,7 +59,7 @@ class RemixErrorBoundary extends React__default['default'].Component {
+ function RemixRootDefaultErrorBoundary({
+   error
+ }) {
+-  console.error(error);
++  console.log(error.stack);
+   return /*#__PURE__*/React__default['default'].createElement("html", {
+     lang: "en"
+   }, /*#__PURE__*/React__default['default'].createElement("head", null, /*#__PURE__*/React__default['default'].createElement("meta", {
+@@ -69,14 +69,14 @@ function RemixRootDefaultErrorBoundary({
+       border: "solid 2px hsl(10, 50%, 50%)",
+       padding: "2rem"
+     }
+-  }, /*#__PURE__*/React__default['default'].createElement("div", null, /*#__PURE__*/React__default['default'].createElement("h1", null, "Uncaught Exception!"), /*#__PURE__*/React__default['default'].createElement("p", null, "If you are not the developer, please click back in your browser and try again."), /*#__PURE__*/React__default['default'].createElement("div", {
++  }, /*#__PURE__*/React__default['default'].createElement("pre", null, /*#__PURE__*/React__default['default'].createElement("h1", null, "Uncaught Exception!"), /*#__PURE__*/React__default['default'].createElement("p", null, "If you are not the developer, please click back in your browser and try again."), /*#__PURE__*/React__default['default'].createElement("div", {
+     style: {
+       fontFamily: `"SFMono-Regular",Consolas,"Liberation Mono",Menlo,Courier,monospace`,
+       padding: "1rem",
+       margin: "1rem 0",
+       border: "solid 4px"
+     }
+-  }, error.message), /*#__PURE__*/React__default['default'].createElement("p", null, "There was an uncaught exception in your application. Check the browser console and/or server console to inspect the error."), /*#__PURE__*/React__default['default'].createElement("p", null, "If you are the developer, consider adding your own error boundary so users don't see this page when unexpected errors happen in production!"), /*#__PURE__*/React__default['default'].createElement("p", null, "Read more about", " ", /*#__PURE__*/React__default['default'].createElement("a", {
++  }, error.stack), /*#__PURE__*/React__default['default'].createElement("p", null, "There was an uncaught exception in your application. Check the browser console and/or server console to inspect the error."), /*#__PURE__*/React__default['default'].createElement("p", null, "If you are the developer, consider adding your own error boundary so users don't see this page when unexpected errors happen in production!"), /*#__PURE__*/React__default['default'].createElement("p", null, "Read more about", " ", /*#__PURE__*/React__default['default'].createElement("a", {
+     target: "_blank",
+     rel: "noreferrer",
+     href: "https://remix.run/dashboard/docs/errors"
