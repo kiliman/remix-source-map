@@ -12,7 +12,7 @@ import stylesUrl from "../styles/index.css";
 
 export let meta: MetaFunction = () => {
   return {
-    title: "Remix Starter",
+    title: "Remix Source Map",
     description: "Welcome to remix!",
   };
 };
