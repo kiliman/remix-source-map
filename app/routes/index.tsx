@@ -1,4 +1,11 @@
-import { MetaFunction, LinksFunction, LoaderFunction, ActionFunction, Link, Form } from "remix";
+import {
+  MetaFunction,
+  LinksFunction,
+  LoaderFunction,
+  ActionFunction,
+  Link,
+  Form,
+} from "remix";
 import { useRouteData } from "remix";
 
 import stylesUrl from "../styles/index.css";
@@ -6,7 +13,7 @@ import stylesUrl from "../styles/index.css";
 export let meta: MetaFunction = () => {
   return {
     title: "Remix Starter",
-    description: "Welcome to remix!"
+    description: "Welcome to remix!",
   };
 };
 
@@ -18,7 +25,7 @@ export let loader: LoaderFunction = async () => {
   return { message: "this is awesome 😎" };
 };
 export let action: ActionFunction = async () => {
-  throw new Error("Oops from action")
+  throw new Error("Oops from action");
 };
 
 export default function Index() {
@@ -36,14 +43,17 @@ export default function Index() {
         <Link to="/page2">Page 2: Client Site Loader</Link>
       </p>
       <h3>Action Exceptions</h3>
-      <div style={{display:'flex', justifyContent:'center', gap: '16px'}}>
-      <form method="post">
-        <button type="submit">Submit Page</button>
-      </form>
-      <Form method="post">
-        <button type="submit">Submit Client</button>
-      </Form>
+      <div style={{ display: "flex", justifyContent: "center", gap: "16px" }}>
+        <form method="post">
+          <button type="submit">Submit Page</button>
+        </form>
+        <Form method="post">
+          <button type="submit">Submit Client</button>
+        </Form>
       </div>
+      <p>
+        View on <a href="https://github.com/kiliman/remix-source-map">GitHub</a>
+      </p>
       <p>Message from the loader: {data.message}</p>
     </div>
   );
