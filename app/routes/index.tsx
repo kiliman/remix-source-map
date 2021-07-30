@@ -31,6 +31,9 @@ export let action: ActionFunction = async () => {
 export default function Index() {
   let data = useRouteData();
 
+  const handleClick = () => {
+    throw new Error("Client side excpeption");
+  };
   return (
     <div style={{ textAlign: "center", padding: 20 }}>
       <h2>Welcome to Remix!</h2>
@@ -51,6 +54,8 @@ export default function Index() {
           <button type="submit">Submit Client</button>
         </Form>
       </div>
+      <h3>Client Side Exceptions</h3>
+      <button onClick={handleClick}>Throw Exception</button>
       <p>
         View on <a href="https://github.com/kiliman/remix-source-map">GitHub</a>
       </p>
