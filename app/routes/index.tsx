@@ -1,3 +1,4 @@
+import { useState } from "react";
 import {
   MetaFunction,
   LinksFunction,
@@ -7,6 +8,7 @@ import {
   Form,
 } from "remix";
 import { useRouteData } from "remix";
+import { doIt } from "../utils";
 
 import stylesUrl from "../styles/index.css";
 
@@ -30,10 +32,16 @@ export let action: ActionFunction = async () => {
 
 export default function Index() {
   let data = useRouteData();
+  let [error, setError] = useState("");
 
-  const handleClick = () => {
-    throw new Error("Client side excpeption");
-  };
+  function handleClick() {
+    try {
+      doIt();
+    } catch (e) {
+      setError(`Stack without source-map. See console.\n${e.stack}`);
+      console.error(e);
+    }
+  }
   return (
     <div style={{ textAlign: "center", padding: 20 }}>
       <h2>Welcome to Remix!</h2>
@@ -56,6 +64,7 @@ export default function Index() {
       </div>
       <h3>Client Side Exceptions</h3>
       <button onClick={handleClick}>Throw Exception</button>
+      <pre style={{ textAlign: "left" }}>{error}</pre>
       <p>
         View on <a href="https://github.com/kiliman/remix-source-map">GitHub</a>
       </p>
